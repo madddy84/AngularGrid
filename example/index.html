@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.js"></script>
+<script>
+    angular.module("angularGrid", []);
+</script>
+
+<script src="../angular-grid.js"></script>
+<script src="../angularGridDataProvider.js"></script>
+<script src="../angularGridColumns.js"></script>
+<script src="../angularGridColumnDefinition.js"></script>
+<script src="../angularGridRepeaters.js"></script>
+<script src="../angularGridHeader.js"></script>
+
+<body ng-app="angularGrid">
+    <div ng-controller="testController as tc">
+        <angular-grid instance-object="tc.testGrid">
+            <angular-grid-global-search server-side-filter-fields="[]" client-side-filter-fields="[]"></angular-grid-global-search>
+            <angular-grid-data-provider type="promise" source="tc.getGridData"></angular-grid-data-provider>
+            <angular-grid-columns default-sort-field-name="Name" default-sort-order="ASC" identity-field-name="Name">
+                <angular-grid-column-definition field-name="Name" field-title="" header-cell-template-url="" row-cell-template-url=""></angular-grid-column-definition>
+				<angular-grid-column-definition field-name="Age" field-title="" header-cell-template-url="" row-cell-template-url=""></angular-grid-column-definition>
+			</angular-grid-columns>
+        </angular-grid>
+    </div>
+</body>
+
+<script>
+    angular.module("angularGrid").controller("testController", function($q) {
+        var self = this;
+        self.testGrid = {
+            abc: "xyz"
+        };
+        self.getGridData = function(queryParams) {
+            var defer = $q.defer();
+            setTimeout(function() {
+                var data = [{
+                    "Name": "John Smith",
+                    "Age": 45
+                }, {
+                    "Name": "Mary Johnson",
+                    "Age": 32
+                }, {
+                    "Name": "Bob Ferguson",
+                    "Age": 27
+                }];
+                defer.resolve(data)
+            }, 1000)
+
+            return defer.promise;
+        };
+
+        setTimeout(function() {
+            self.testGrid.reload();
+        }, 100);
+    });
+</script>
+
+<script>
+angular.module("angularGrid").directive("includeReplace", () => {
+    return {
+        require: "ngInclude",
+        restrict: "A", /* optional */
+        link: (scope, el, attrs) => {
+            el.replaceWith(el.children());
+        }
+    };
+});
+</script>
+
+</html>
