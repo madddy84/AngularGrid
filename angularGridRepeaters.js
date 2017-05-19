@@ -55,7 +55,7 @@
             //restrict: 'E',
             scope: true,
 			replace:true,
-			template:'<div ng-repeat="visibleItem in gridCtrl.visibleItems" ng-include="gridCtrl.rowTemplateUrl" include-replace></div>'
+			template:'<div ng-repeat="row in gridCtrl.visibleItems" ng-include="gridCtrl.rowTemplateUrl" include-replace></div>'
         };
         return directive;
 
@@ -70,6 +70,8 @@
 		
     }
 })();
+
+///---------------------------------------- Row Cell Repeater ---------------------------------------------///
 
 (function() {
     'use strict';

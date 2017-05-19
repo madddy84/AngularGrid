@@ -14,12 +14,15 @@
 <script src="../angularGridColumnDefinition.js"></script>
 <script src="../angularGridRepeaters.js"></script>
 <script src="../angularGridHeader.js"></script>
+<script src="../angularGridElement.js"></script>
+<script src="../angularGridItemSelector.js"></script>
 
 <body ng-app="angularGrid">
     <div ng-controller="testController as tc">
         <angular-grid instance-object="tc.testGrid">
             <angular-grid-global-search server-side-filter-fields="[]" client-side-filter-fields="[]"></angular-grid-global-search>
             <angular-grid-data-provider type="promise" source="tc.getGridData"></angular-grid-data-provider>
+			<angular-grid-item-selector selection-mode="Single" selected-items=""></angular-grid-item-selector>
             <angular-grid-columns default-sort-field-name="Name" default-sort-order="ASC" identity-field-name="Name">
                 <angular-grid-column-definition field-name="Name" field-title="" header-cell-template-url="" row-cell-template-url=""></angular-grid-column-definition>
 				<angular-grid-column-definition field-name="Age" field-title="" header-cell-template-url="" row-cell-template-url=""></angular-grid-column-definition>
@@ -62,7 +65,7 @@
 <script>
 angular.module("angularGrid").directive("includeReplace", () => {
     return {
-        require: "ngInclude",
+        //require: "ngInclude",
         restrict: "A", /* optional */
         link: (scope, el, attrs) => {
             el.replaceWith(el.children());

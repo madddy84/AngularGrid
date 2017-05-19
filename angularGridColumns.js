@@ -16,7 +16,7 @@
             controller: angularGridColumnsController,
             controllerAs: 'gridClmnsCtrl',
 			transclude:true,
-			template:"<ng-transclude>",
+			template:"<ng-transclude include-replace>",
             link: link,
             //restrict: 'E',
             scope: true
@@ -36,6 +36,10 @@
 		gridClmnsCtrl.populateColumns = function(){
 			gridCtrl.columns = []
 			$compile($element.contents())
+		}
+		
+		gridClmnsCtrl.onToggleSort = function(col){
+			
 		}
 
         setTimeout(function() {
