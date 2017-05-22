@@ -25,21 +25,14 @@
         <div angular-grid="tc.testGrid">
             <angular-grid-global-search server-side-filter-fields="[]" client-side-filter-fields="[]"></angular-grid-global-search>
             <angular-grid-data-provider type="promise" source="tc.getGridData"></angular-grid-data-provider>
-			<angular-grid-item-selector selection-mode="Single" selected-items="tc.selected"></angular-grid-item-selector>
+			<angular-grid-item-selector selection-mode="Multiple" selected-items="tc.selected"></angular-grid-item-selector>
             <angular-grid-columns default-sort-field-name="Name" default-sort-order="ASC" identity-field-name="Id">
                 <angular-grid-column-definition field-name="Id" field-title="X" header-cell-template-url="" row-cell-template-url="../defaultTemplates/rowCellCheckboxTemplate.html"></angular-grid-column-definition>
                 <angular-grid-column-definition field-name="Name" field-title="" header-cell-template-url="" row-cell-template-url=""></angular-grid-column-definition>
 				<angular-grid-column-definition field-name="Age" field-title="" header-cell-template-url="" row-cell-template-url=""></angular-grid-column-definition>
 			</angular-grid-columns>
         </div>
-    
-	
-	
-	
 	</div>
-	
-	
-	
 </body>
 
 <script>
@@ -66,14 +59,14 @@
                     "Age": 27
                 }];
 				
-				<!-- for(var a=0;a<1000;a++) -->
-				<!-- { -->
-					<!-- data.push({ -->
-						<!-- "Id":4+a, -->
-						<!-- "Name": "Bob Ferguson", -->
-						<!-- "Age": 27 + a -->
-					<!-- }); -->
-				<!-- } -->
+				for(var a=4;a<1000;a++)
+				{
+					data.push({
+						"Id":a,
+						"Name": "Bob Ferguson",
+						"Age": a
+					});
+				}
 				
                 defer.resolve(data)
             }, 0)
@@ -83,7 +76,7 @@
 
         setTimeout(function() {
             self.testGrid.reload();
-			self.testGrid.selector.setSelectedItemIds([3]);
+			self.testGrid.selector.setSelectedItemIds([3,10,200,30]);
         }, 100);
     });
 </script>

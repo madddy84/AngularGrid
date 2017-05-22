@@ -55,7 +55,9 @@
             //restrict: 'E',
             scope: true,
 			replace:true,
-			template:'<div ng-repeat="row in gridCtrl.visibleItems" ng-include="gridCtrl.rowTemplateUrl" include-replace></div>'
+			template:'<div ng-repeat="row in gridCtrl.visibleItems" ng-include="gridCtrl.rowTemplateUrl" include-replace>'+
+			+ '</div>'
+			+ '{{row.isRowSelected = !!gridCtrl.selectedItemIds[row[gridCtrl.identityFieldName]]}}'
         };
         return directive;
 

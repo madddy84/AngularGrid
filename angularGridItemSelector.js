@@ -44,7 +44,7 @@
 			
 			selectorInstance.setSelectedItemIds = function(items, appendItems){
 				items.forEach(function(eachId) {
-						gridCtrl.selectedItemIds[eachId] = true;
+					gridCtrl.selectedItemIds[eachId] = true;
 				});
 			};
 			
@@ -55,8 +55,6 @@
 			});
 									
 			gridItmSltrCtrl.onRowSelectorClicked = function(args){
-				
-				
 				switch($scope.selectionMode.toLowerCase()){
 					case "single":
 							gridCtrl.selectedItemIds = {};
@@ -65,8 +63,13 @@
 						break;
 						
 					case "multiple":
-							//var isSelected = args.row[gridCtrlScope.selectionField] = !args.row[gridCtrlScope.selectionField];
-							
+							var id = args.row[gridCtrl.identityFieldName];
+							if(gridCtrl.selectedItemIds[id]){	
+								delete gridCtrl.selectedItemIds[id]
+							}
+							else{
+								gridCtrl.selectedItemIds[id] = true;
+							}
 						break;
 				}
 				
