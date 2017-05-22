@@ -40,6 +40,7 @@
 						}
 					});
                     break;
+					
 				case "JSON":
                         gridCtrl.dataItems = gridDpCtrl.source();
 						gridCtrl.populateVisibleItems();
@@ -47,9 +48,9 @@
             }
         }
 
-        gridCtrl.instanceObject.reload = function() {
-            gridDpCtrl.fetchData();
-        }
+        $scope.$on("onReload",function(){
+			gridDpCtrl.fetchData();
+		});
 
         setTimeout(function() {
             $element.parent().children();

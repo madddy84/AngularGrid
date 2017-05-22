@@ -8,8 +8,8 @@
     function angularGridColumns() {
         var directive = {
             bindToController: {
-                defaultSortOrder: "@",
-                defaultSortFieldName: "@",
+                defaultSortOrder: "=",
+                defaultSortFieldName: "=",
                 identityFieldName: "@"
             },
             require: "^angularGrid",
@@ -23,15 +23,20 @@
         };
         return directive;
 
-        function link(scope, element, attrs) {}
+        function link(scope, element, attrs) {
+			console.log();
+		}
     }
-    angularGridColumnsController.inject = ["$scope", "$element","$compile"];
+    angularGridColumnsController.$inject = ["$scope", "$element","$compile"];
 
     function angularGridColumnsController($scope, $element, $compile) {
         var gridClmnsCtrl = this;
         var gridCtrl = $element.parent().controller("angularGrid");
-		
-		gridCtrl.columns = [];
+				
+		gridClmnsCtrl.$onInit = function(){
+			gridCtrl.identityFieldName = gridClmnsCtrl.identityFieldName;
+			gridCtrl.columns = [];
+		}
 		
 		gridClmnsCtrl.populateColumns = function(){
 			gridCtrl.columns = []

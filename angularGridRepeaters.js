@@ -26,7 +26,7 @@
 
         function link(scope, element, attrs) {}
     }
-    angularGridHeaderCellRepeaterController.inject = ["$scope", "$element"];
+    angularGridHeaderCellRepeaterController.$inject = ["$scope", "$element"];
 
     function angularGridHeaderCellRepeaterController($scope, $element) {
         var hdrRptrController = this;
@@ -61,13 +61,12 @@
 
         function link(scope, element, attrs) {}
     }
-    angularGridRowRepeaterController.inject = ["$scope", "$element"];
+    angularGridRowRepeaterController.$inject = ["$scope", "$element"];
 
     function angularGridRowRepeaterController($scope, $element) {
         var rowRptrController = this;
         var gridCtrl = $element.parent().controller("angularGrid");
 		gridCtrl.rowTemplateUrl = gridCtrl.rowTemplateUrl || "../defaultTemplates/rowTemplateUrl.html"
-		
     }
 })();
 
@@ -87,7 +86,7 @@
             // },
             require: "^angularGrid",
             controller: angularGridRowCellRepeaterController,
-            controllerAs: 'rowCellRptrController',
+            controllerAs: 'rowCellRptrCtrl',
             link: link,
             //restrict: 'E',
             scope: true,
@@ -98,10 +97,10 @@
 
         function link(scope, element, attrs) {}
     }
-    angularGridRowCellRepeaterController.inject = ["$scope", "$element"];
+    angularGridRowCellRepeaterController.$inject = ["$scope", "$element"];
 
     function angularGridRowCellRepeaterController($scope, $element) {
-        var rowCellRptrController = this;
+        var rowCellRptrCtrl = this;
         var gridCtrl = $element.parent().controller("angularGrid");
     }
 })();

@@ -11,7 +11,8 @@
                 sortOrder: "@",
                 fieldName: "@",
 				fieldTitle: "@",
-				cellTemplateUrl: "@",
+				rowCellTemplateUrl: "@",
+				headerCellTemplateUrl: "@",
 				cellSize:"="
             },
             require: "^angularGridColumns",
@@ -25,7 +26,7 @@
 
         function link($scope, element, attrs) {}
     }
-    angularGridColumnDefinitionController.inject = ["$scope", "$element"];
+    angularGridColumnDefinitionController.$inject = ["$scope", "$element"];
 
     function angularGridColumnDefinitionController($scope, $element) {
         var gridClmnsDefCtrl = this;
@@ -50,8 +51,8 @@
 					sortOrder : gridClmnsDefCtrl.sortOrder,
 					fieldName : gridClmnsDefCtrl.fieldName,
 					fieldTitle : gridClmnsDefCtrl.fieldTitle,
-					headerCellTemplateUrl : gridClmnsDefCtrl.cellTemplateUrl || "../defaultTemplates/columnHeaderCellTemplate.html",
-					rowCellTemplateUrl : gridClmnsDefCtrl.cellTemplateUrl || "../defaultTemplates/rowCellTemplate.html",
+					headerCellTemplateUrl : gridClmnsDefCtrl.headerCellTemplateUrl || "../defaultTemplates/columnHeaderCellTemplate.html",
+					rowCellTemplateUrl : gridClmnsDefCtrl.rowCellTemplateUrl || "../defaultTemplates/rowCellTemplate.html",
 					cssClasses : cssClasses.length ? cssClasses.join(" ") : "col-xs-1"
 				});
         }, 0);

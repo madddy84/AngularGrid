@@ -22,45 +22,38 @@
 			
 		}
 
-		angularGridElementController.inject = ["$scope", "$element"];
+		angularGridElementController.$inject = ["$scope", "$element"];
 
 		function angularGridElementController($scope, $element) {
 			var gridElementCtrl = this;
 			var gridCtrl = $element.parent().controller("angularGrid");
-			
-			setTimeout(function(){
-				$element.bind("click",function(e,x){
-					var type = $element[0].getAttribute("angular-grid-element");
-					gridElementCtrl.onElementCkick(e, type);
-				});
-			});
+			var type = $element[0].getAttribute("angular-grid-element");
+				
+			gridElementCtrl.$onInit = function(){
+				setTimeout(function(){
+					$element.bind("click",function(e,x){
+						$scope.$evalAsync(function(){
+							gridElementCtrl.onElementCkick(e, type);	
+						})
+					});
+				});			
+			};
 			
 			gridElementCtrl.onElementCkick = function(e, type){
 				if(!type)
 				{
 					throw "on angularGridElement, type is not specified. The type such as 'cell, headerCell, row, rowSelector' e.g angular-grid-element";
 				}
-				
-				switch(type.toLowerCase()){
-					
-					case "cell":
-							var angularGridItemSelector = gridElementCtrl.getParentElement($element,"angularGrid")[0].querySelector(".angularGridItemSelector");
-							var gridItmSltrCtrl = angularGridItemSelector.controller();
-							gridItmSltrCtrl.onCellClicked();
-							
-						break;
-					
-				}
-			}
-			
-			gridElementCtrl.getParentElement = function (e, className) {
-			  if (e[0].nodeName == "HTML") {
-				return null;
-			  } else if (e.hasClass(className)) {
-				return e;
-			  } else {
-				return gridElementCtrl.getParentElement(e.parent(), className);
-			  }
+								
+				gridCtrl.onElementAction(
+				{ 
+					action:"click", 
+					elementType:type, 
+					eventArgs : e, 
+					element:$element,
+					row : $scope.row,
+					col : $scope.col						
+				});
 			}
 		}
 	}

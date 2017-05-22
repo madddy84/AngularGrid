@@ -13,12 +13,11 @@
             controller: angularGridItemSelectorController,
             controllerAs: 'gridItmSltrCtrl',
             link: link,
-			template:"<p>Test para {{testText}}</p>",
+			//template:"<p>Test para {{testText}}</p>",
             //restrict: 'E',
             scope: {
 				selectionMode : "@",
-				selectedItems : "=",
-				onSelectedItemsChanged : "&"
+				onSelectedItemsChanged : "&",
 			}
         };
         return directive;
@@ -35,14 +34,43 @@
 		function angularGridItemSelectorController($scope, $element) {
 			var gridItmSltrCtrl = this;
 			var gridCtrl = $element.parent().controller("angularGrid");
+			var gridCtrlScope = $element.parent().scope("angularGrid");
+			var selectorInstance = gridCtrl.angularGrid.selector = {};
+			var lastUpdatedDataItem;
 			
-			gridItmSltrCtrl.onRowClicked = function(e, row){
-				
-			}
+			selectorInstance.getSelectedItemIds = function(){
+				return Object.keys(gridCtrl.selectedItemIds);
+			};
 			
-			gridItmSltrCtrl.onCellClicked = function(e, row, coll){
+			selectorInstance.setSelectedItemIds = function(items, appendItems){
+				items.forEach(function(eachId) {
+						gridCtrl.selectedItemIds[eachId] = true;
+				});
+			};
+			
+			$scope.$on("onElementAction", function(e, args){
+				if(args.elementType === "rowSelector"){
+					gridItmSltrCtrl.onRowSelectorClicked(args);
+				}
+			});
+									
+			gridItmSltrCtrl.onRowSelectorClicked = function(args){
 				
-			}
+				
+				switch($scope.selectionMode.toLowerCase()){
+					case "single":
+							gridCtrl.selectedItemIds = {};
+							var id = args.row[gridCtrl.identityFieldName];
+							gridCtrl.selectedItemIds[id] = true;
+						break;
+						
+					case "multiple":
+							//var isSelected = args.row[gridCtrlScope.selectionField] = !args.row[gridCtrlScope.selectionField];
+							
+						break;
+				}
+				
+			};
 		
 		}
 	}

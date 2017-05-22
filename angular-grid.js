@@ -13,10 +13,10 @@
             controller: AngularGridController,
             controllerAs: 'gridCtrl',
             link: link,
-            template:"<ng-transclude></ng-transclude>" +
-					 "<div ng-include='gridTemplateUrl'></div>",
+            template:"<ng-transclude include-replace></ng-transclude>" +
+					 "<div ng-include='gridTemplateUrl' include-replace></div>",
             bindToController: {
-                instanceObject: "=",
+                angularGrid: "=?",
 				rowTemplateUrl: "@",
 				gridTemplateUrl :"@"
             },
@@ -26,32 +26,39 @@
         return directive;
 
         function link(scope, element, attrs, gridCtrl) {
-            gridCtrl.identityField = attrs.identityField;
 			scope.gridTemplateUrl = scope.gridTemplateUrl || "../defaultTemplates/gridTemplate.html"
-			
-            gridCtrl.init();
-			
+			scope.angularGrid = scope.angularGrid || {};
         }
     }
 
-    function AngularGridController() {
+	AngularGridController.$inject = ["$scope", "$element","$compile"];
+    function AngularGridController($scope) {
         var gridCtrl = this;
-        gridCtrl.init = function() {
-            gridCtrl.visibleItems = [];
-            gridCtrl.dataItems = [];
-            gridCtrl.clientSideFilters = [];
-            gridCtrl.queryParams = {}
+		
+		gridCtrl.$onInit = function(){
+			gridCtrl.onElementAction = function(e){
+				$scope.$broadcast("onElementAction",e);
+			};
+			
+			gridCtrl.angularGrid.reload = function() {
+				$scope.$broadcast("onReload");
+				
+			}
+			
+			gridCtrl.visibleItems = [];
+			gridCtrl.dataItems = [];
+			gridCtrl.clientSideFilters = [];
+			gridCtrl.queryParams = {};
+			gridCtrl.selectedItemIds = {};
 
-            if (!gridCtrl.instanceObject) { gridCtrl.instanceObject = {}; }
-
-            gridCtrl.populateVisibleItems = function() {
-                gridCtrl.visibleItems = gridCtrl.dataItems;
-                gridCtrl.clientSideFilters.forEach(function(eachFilter) {
-                    if (typeof(eachFilter) === "function") {
-                        gridCtrl.visibleItems = eachFilter(gridCtrl.visibleItems);
-                    }
-                });
-            }
-        };
+			gridCtrl.populateVisibleItems = function() {
+				gridCtrl.visibleItems = gridCtrl.dataItems;
+				gridCtrl.clientSideFilters.forEach(function(eachFilter) {
+					if (typeof(eachFilter) === "function") {
+						gridCtrl.visibleItems = eachFilter(gridCtrl.visibleItems);
+					}
+				});
+			};
+		};
     };
 })();

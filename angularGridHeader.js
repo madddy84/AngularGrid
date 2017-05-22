@@ -27,7 +27,7 @@
 
         function link(scope, element, attrs) {}
     }
-    angularGridHeaderController.inject = ["$scope", "$element","$compile"];
+    angularGridHeaderController.$inject = ["$scope", "$element","$compile"];
 
     function angularGridHeaderController($scope, $element, $compile) {
         var gridHeaderCtrl = this;

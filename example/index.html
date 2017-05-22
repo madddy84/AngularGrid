@@ -19,16 +19,27 @@
 
 <body ng-app="angularGrid">
     <div ng-controller="testController as tc">
-        <angular-grid instance-object="tc.testGrid">
+	
+	{{tc.testGrid.selector.getSelectedItemIds()}}
+	
+        <div angular-grid="tc.testGrid">
             <angular-grid-global-search server-side-filter-fields="[]" client-side-filter-fields="[]"></angular-grid-global-search>
             <angular-grid-data-provider type="promise" source="tc.getGridData"></angular-grid-data-provider>
-			<angular-grid-item-selector selection-mode="Single" selected-items=""></angular-grid-item-selector>
-            <angular-grid-columns default-sort-field-name="Name" default-sort-order="ASC" identity-field-name="Name">
+			<angular-grid-item-selector selection-mode="Single" selected-items="tc.selected"></angular-grid-item-selector>
+            <angular-grid-columns default-sort-field-name="Name" default-sort-order="ASC" identity-field-name="Id">
+                <angular-grid-column-definition field-name="Id" field-title="X" header-cell-template-url="" row-cell-template-url="../defaultTemplates/rowCellCheckboxTemplate.html"></angular-grid-column-definition>
                 <angular-grid-column-definition field-name="Name" field-title="" header-cell-template-url="" row-cell-template-url=""></angular-grid-column-definition>
 				<angular-grid-column-definition field-name="Age" field-title="" header-cell-template-url="" row-cell-template-url=""></angular-grid-column-definition>
 			</angular-grid-columns>
-        </angular-grid>
-    </div>
+        </div>
+    
+	
+	
+	
+	</div>
+	
+	
+	
 </body>
 
 <script>
@@ -41,23 +52,38 @@
             var defer = $q.defer();
             setTimeout(function() {
                 var data = [{
+					"Id":1,
                     "Name": "John Smith",
                     "Age": 45
                 }, {
+					"Id":2,
                     "Name": "Mary Johnson",
-                    "Age": 32
+                    "Age": 32,
+					"isSelected":true
                 }, {
+					"Id":3,
                     "Name": "Bob Ferguson",
                     "Age": 27
                 }];
+				
+				<!-- for(var a=0;a<1000;a++) -->
+				<!-- { -->
+					<!-- data.push({ -->
+						<!-- "Id":4+a, -->
+						<!-- "Name": "Bob Ferguson", -->
+						<!-- "Age": 27 + a -->
+					<!-- }); -->
+				<!-- } -->
+				
                 defer.resolve(data)
-            }, 1000)
+            }, 0)
 
             return defer.promise;
         };
 
         setTimeout(function() {
             self.testGrid.reload();
+			self.testGrid.selector.setSelectedItemIds([3]);
         }, 100);
     });
 </script>
