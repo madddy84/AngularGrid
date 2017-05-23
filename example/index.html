@@ -8,7 +8,7 @@
     angular.module("angularGrid", []);
 </script>
 
-<script src="../angular-grid.js"></script>
+<script src="../angularGrid.js"></script>
 <script src="../angularGridDataProvider.js"></script>
 <script src="../angularGridColumns.js"></script>
 <script src="../angularGridColumnDefinition.js"></script>
@@ -24,12 +24,12 @@
 	
         <div angular-grid="tc.testGrid">
             <angular-grid-global-search server-side-filter-fields="[]" client-side-filter-fields="[]"></angular-grid-global-search>
-            <angular-grid-data-provider type="promise" source="tc.getGridData"></angular-grid-data-provider>
+            <angular-grid-data-provider total-item-count="1000" type="promise" source="tc.getGridData"></angular-grid-data-provider>
 			<angular-grid-item-selector selection-mode="Multiple" selected-items="tc.selected"></angular-grid-item-selector>
             <angular-grid-columns default-sort-field-name="Name" default-sort-order="ASC" identity-field-name="Id">
                 <angular-grid-column-definition field-name="Id" field-title="X" header-cell-template-url="" row-cell-template-url="../defaultTemplates/rowCellCheckboxTemplate.html"></angular-grid-column-definition>
                 <angular-grid-column-definition field-name="Name" field-title="" header-cell-template-url="" row-cell-template-url=""></angular-grid-column-definition>
-				<angular-grid-column-definition field-name="Age" field-title="" header-cell-template-url="" row-cell-template-url=""></angular-grid-column-definition>
+				<angular-grid-column-definition field-name="Age" field-title="" header-cell-template-url="" row-cell-template-url="" custom-display-text="tc.dispText"></angular-grid-column-definition>
 			</angular-grid-columns>
         </div>
 	</div>
@@ -41,6 +41,11 @@
         self.testGrid = {
             abc: "xyz"
         };
+		
+		self.dispText = function(e){
+			return "Hi" + e.cell
+		}
+		
         self.getGridData = function(queryParams) {
             var defer = $q.defer();
             setTimeout(function() {

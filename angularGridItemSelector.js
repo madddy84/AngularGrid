@@ -36,7 +36,8 @@
 			var gridCtrl = $element.parent().controller("angularGrid");
 			var gridCtrlScope = $element.parent().scope("angularGrid");
 			var selectorInstance = gridCtrl.angularGrid.selector = {};
-			var lastUpdatedDataItem;
+			
+			gridCtrl.selectedItemIds = {};
 			
 			selectorInstance.getSelectedItemIds = function(){
 				return Object.keys(gridCtrl.selectedItemIds);

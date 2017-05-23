@@ -49,8 +49,7 @@
 			gridCtrl.dataItems = [];
 			gridCtrl.clientSideFilters = [];
 			gridCtrl.queryParams = {};
-			gridCtrl.selectedItemIds = {};
-
+			
 			gridCtrl.populateVisibleItems = function() {
 				gridCtrl.visibleItems = gridCtrl.dataItems;
 				gridCtrl.clientSideFilters.forEach(function(eachFilter) {

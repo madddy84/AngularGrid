@@ -36,13 +36,33 @@
 							gridElementCtrl.onElementCkick(e, type);	
 						})
 					});
-				});			
+				});		
+				
+				if(type === "cell")
+				{
+					if(typeof($scope.col.customDisplayTextFunc()) === "function")
+					{
+						var customValue = $scope.col.customDisplayTextFunc()(
+						{
+							cell: $scope.row[$scope.col.fieldName],
+							row: $scope.row,
+							col: $scope.col,
+							queryParams: gridCtrl.queryParams, 
+							element: $element
+						});
+						$scope.cellValue = customValue;
+					}
+					else{
+						$scope.cellValue = $scope.row[$scope.col.fieldName];
+					}
+				}
 			};
 			
 			gridElementCtrl.onElementCkick = function(e, type){
 				if(!type)
 				{
-					throw "on angularGridElement, type is not specified. The type such as 'cell, headerCell, row, rowSelector' e.g angular-grid-element";
+					throw "on angularGridElement, type is not specified."+
+					" The type such as 'cell, headerCell, row, rowSelector' e.g angular-grid-element='rowSelector'";
 				}
 								
 				gridCtrl.onElementAction(

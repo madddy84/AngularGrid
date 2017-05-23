@@ -13,6 +13,7 @@
 				fieldTitle: "@",
 				rowCellTemplateUrl: "@",
 				headerCellTemplateUrl: "@",
+				customDisplayText: "&",
 				cellSize:"="
             },
             require: "^angularGridColumns",
@@ -53,7 +54,8 @@
 					fieldTitle : gridClmnsDefCtrl.fieldTitle,
 					headerCellTemplateUrl : gridClmnsDefCtrl.headerCellTemplateUrl || "../defaultTemplates/columnHeaderCellTemplate.html",
 					rowCellTemplateUrl : gridClmnsDefCtrl.rowCellTemplateUrl || "../defaultTemplates/rowCellTemplate.html",
-					cssClasses : cssClasses.length ? cssClasses.join(" ") : "col-xs-1"
+					cssClasses : cssClasses.length ? cssClasses.join(" ") : "col-xs-1",
+					customDisplayTextFunc : gridClmnsDefCtrl.customDisplayText
 				});
         }, 0);
     }
