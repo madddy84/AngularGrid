@@ -5,9 +5,9 @@
         .module('angularGrid')
         .directive('angularGrid', angularGrid);
 
-    angularGrid.$inject = [];
+    angularGrid.$inject = ["$compile","$window"];
 
-    function angularGrid() {
+    function angularGrid($compile,$window) {
         var directive = {
             scope: true,
             controller: AngularGridController,
@@ -34,7 +34,7 @@
 	AngularGridController.$inject = ["$scope", "$element","$compile"];
     function AngularGridController($scope) {
         var gridCtrl = this;
-		
+
 		gridCtrl.$onInit = function(){
 			gridCtrl.onElementAction = function(e){
 				$scope.$broadcast("onElementAction",e);
@@ -42,7 +42,10 @@
 			
 			gridCtrl.angularGrid.reload = function() {
 				$scope.$broadcast("onReload");
-				
+			}
+			
+			gridCtrl.onInfiniteScroll = function(){
+				$scope.$broadcast("onInfiniteScroll");
 			}
 			
 			gridCtrl.visibleItems = [];

@@ -38,12 +38,12 @@
 			
 			var cssClasses = [];
 			
-			if($scope.cellSize)
+			if(gridClmnsDefCtrl.cellSize)
 			{
-				$scope.cellSize.xs ? cssClasses.push("col-xs-" + $scope.cellSize.xs) : "";
-				$scope.cellSize.sm ? cssClasses.push("col-sm-" + $scope.cellSize.sm) : "";
-				$scope.cellSize.md ? cssClasses.push("col-md-" + $scope.cellSize.md) : "";
-				$scope.cellSize.lg ? cssClasses.push("col-lg-" + $scope.cellSize.lg) : "";
+				gridClmnsDefCtrl.cellSize.xs ? cssClasses.push("col-xs-" + gridClmnsDefCtrl.cellSize.xs) : "";
+				gridClmnsDefCtrl.cellSize.sm ? cssClasses.push("col-sm-" + gridClmnsDefCtrl.cellSize.sm) : "";
+				gridClmnsDefCtrl.cellSize.md ? cssClasses.push("col-md-" + gridClmnsDefCtrl.cellSize.md) : "";
+				gridClmnsDefCtrl.cellSize.lg ? cssClasses.push("col-lg-" + gridClmnsDefCtrl.cellSize.lg) : "";
 			}
 			
 			gridClmnsDefCtrl

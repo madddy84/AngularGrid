@@ -38,7 +38,11 @@
 					});
 				});		
 				
-				if(type === "cell")
+				if(type === "row")
+				{
+					$element.addClass("angularGridRow");
+				}
+				else if(type === "cell")
 				{
 					if(typeof($scope.col.customDisplayTextFunc()) === "function")
 					{
@@ -62,7 +66,7 @@
 				if(!type)
 				{
 					throw "on angularGridElement, type is not specified."+
-					" The type such as 'cell, headerCell, row, rowSelector' e.g angular-grid-element='rowSelector'";
+					" The type such as 'cell, headerCell, row, rowSelector, gridBody' e.g angular-grid-element='rowSelector'";
 				}
 								
 				gridCtrl.onElementAction(
@@ -70,7 +74,7 @@
 					action:"click", 
 					elementType:type, 
 					eventArgs : e, 
-					element:$element,
+					element: $element,
 					row : $scope.row,
 					col : $scope.col						
 				});

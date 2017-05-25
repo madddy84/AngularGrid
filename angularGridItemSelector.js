@@ -26,7 +26,6 @@
 			element.addClass("angularGridItemSelector");
 			$scope.testText = "Ho ho ho"
 			$scope.selectedItems = [{a:1},{b:2}];
-			console.log($scope);
 		}
 
 		angularGridItemSelectorController.$inject = ["$scope", "$element"];
