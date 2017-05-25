@@ -24,8 +24,6 @@
 
         function link($scope, element, attrs) {
 			element.addClass("angularGridItemSelector");
-			$scope.testText = "Ho ho ho"
-			$scope.selectedItems = [{a:1},{b:2}];
 		}
 
 		angularGridItemSelectorController.$inject = ["$scope", "$element"];
@@ -36,39 +34,94 @@
 			var gridCtrlScope = $element.parent().scope("angularGrid");
 			var selectorInstance = gridCtrl.angularGrid.selector = {};
 			
-			gridCtrl.selectedItemIds = {};
+			gridCtrl.allDataItems = {};
+			
+			gridCtrl.affectedItemIds = {};
+			gridCtrl.globalSelectionFlag = false;
 			
 			selectorInstance.getSelectedItemIds = function(){
-				return Object.keys(gridCtrl.selectedItemIds);
+				if(gridCtrl.globalSelectionFlag)
+				{
+					//If gridCtrl.globalSelectionFlag is true that means the 
+					//items in gridCtrl.affectedItemIds are de-selected ids
+					var selectedIds = [];
+					var aids = Object.keys(gridCtrl.allDataItems);
+					for(var i=0;i<aids.length;i++)
+					{
+						if(!gridCtrl.affectedItemIds[aids[i]])
+						{
+							selectedIds.push(aids[i]);
+						}
+					}
+					return selectedIds;
+				}
+				return Object.keys(gridCtrl.affectedItemIds);
 			};
 			
 			selectorInstance.setSelectedItemIds = function(items, appendItems){
 				items.forEach(function(eachId) {
-					gridCtrl.selectedItemIds[eachId] = true;
+					gridCtrl.affectedItemIds[eachId] = true;
 				});
 			};
+						
+			gridCtrl.dataSource({skip:0, take:9999999}).then(function(data){
+				for(var i=0;i<data.length;i++)
+				{
+					gridCtrl.allDataItems[data[i][gridCtrl.identityFieldName]] = data[i];
+				}
+			});
 			
 			$scope.$on("onElementAction", function(e, args){
-				if(args.elementType === "rowSelector"){
-					gridItmSltrCtrl.onRowSelectorClicked(args);
+				
+				switch(args.elementType)
+				{
+					case "rowSelector":
+						gridItmSltrCtrl.onRowSelectorClicked(args);
+						break
+					
+					
+					case "globalSelectToggler":
+							
+						var itemsAffectedCount = Object.keys(gridCtrl.affectedItemIds).length;
+					
+						// If nothing is selected/deselected manually
+						if(itemsAffectedCount == 0){
+							// Then select/unselect everything globally
+							gridCtrl.globalSelectionFlag = !gridCtrl.globalSelectionFlag;
+							return;
+						}
+						
+						//If everything is selected by clicking each item individually
+						if(itemsAffectedCount === Object.keys(gridCtrl.allDataItems).length){
+							gridCtrl.affectedItemIds = {};
+							return;
+						}
+						
+						//If few items are affected manually
+						if(itemsAffectedCount)
+						{
+							gridCtrl.affectedItemIds = {};
+							gridCtrl.globalSelectionFlag = true;
+						}
+					break;
 				}
 			});
 									
 			gridItmSltrCtrl.onRowSelectorClicked = function(args){
 				switch($scope.selectionMode.toLowerCase()){
 					case "single":
-							gridCtrl.selectedItemIds = {};
+							gridCtrl.affectedItemIds = {};
 							var id = args.row[gridCtrl.identityFieldName];
-							gridCtrl.selectedItemIds[id] = true;
+							gridCtrl.affectedItemIds[id] = true;
 						break;
 						
 					case "multiple":
 							var id = args.row[gridCtrl.identityFieldName];
-							if(gridCtrl.selectedItemIds[id]){	
-								delete gridCtrl.selectedItemIds[id]
+							if(gridCtrl.affectedItemIds[id]){	
+								delete gridCtrl.affectedItemIds[id]
 							}
 							else{
-								gridCtrl.selectedItemIds[id] = true;
+								gridCtrl.affectedItemIds[id] = true;
 							}
 						break;
 				}

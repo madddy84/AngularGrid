@@ -7,20 +7,10 @@
 
     function angularGridElement() {
         var directive = {
-            // bindToController: {
-              
-            // },
             controller: angularGridElementController,
-            controllerAs: 'gridElementCtrl',
-            link: link,
-            //restrict: 'E',
-            //scope: true
+            controllerAs: 'gridElementCtrl'
         };
         return directive;
-
-        function link($scope, $element, attrs) {
-			
-		}
 
 		angularGridElementController.$inject = ["$scope", "$element"];
 
@@ -38,27 +28,29 @@
 					});
 				});		
 				
-				if(type === "row")
+				switch(type)
 				{
-					$element.addClass("angularGridRow");
-				}
-				else if(type === "cell")
-				{
-					if(typeof($scope.col.customDisplayTextFunc()) === "function")
-					{
-						var customValue = $scope.col.customDisplayTextFunc()(
+					case "row":
+							$element.addClass("angularGridRow");
+					break;
+
+					case "cell":
+						if(typeof($scope.col.customDisplayTextFunc()) === "function")
 						{
-							cell: $scope.row[$scope.col.fieldName],
-							row: $scope.row,
-							col: $scope.col,
-							queryParams: gridCtrl.queryParams, 
-							element: $element
-						});
-						$scope.cellValue = customValue;
-					}
-					else{
-						$scope.cellValue = $scope.row[$scope.col.fieldName];
-					}
+							var customValue = $scope.col.customDisplayTextFunc()(
+							{
+								cell: $scope.row[$scope.col.fieldName],
+								row: $scope.row,
+								col: $scope.col,
+								queryParams: gridCtrl.queryParams, 
+								element: $element
+							});
+							$scope.cellValue = customValue;
+						}
+						else{
+							$scope.cellValue = $scope.row[$scope.col.fieldName];
+						}
+					break;
 				}
 			};
 			
@@ -66,7 +58,7 @@
 				if(!type)
 				{
 					throw "on angularGridElement, type is not specified."+
-					" The type such as 'cell, headerCell, row, rowSelector, gridBody' e.g angular-grid-element='rowSelector'";
+					" The type such as 'cell, headerCell, globalSelectToggler, row, rowSelector, gridBody' e.g angular-grid-element='rowSelector'";
 				}
 								
 				gridCtrl.onElementAction(

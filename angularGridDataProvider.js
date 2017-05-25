@@ -10,7 +10,6 @@
             bindToController: {
                 type: "@",
                 source: "&",
-				countSource: "&",
 				pageSize: "@"
             },
             require: "^angularGrid",
@@ -24,17 +23,34 @@
 
         function link(scope, element, attrs) {}
     }
-    GridDataProviderController.$inject = ["$scope", "$element","$window"];
+    GridDataProviderController.$inject = ["$scope", "$element","$window","$q"];
 
-    function GridDataProviderController($scope, $element, $window) {
+    function GridDataProviderController($scope, $element, $window,$q) {
         var gridDpCtrl = this;
         var gridCtrl = $element.parent().controller("angularGrid");
-		gridCtrl.totalItemCount = 0;
-        		
 		gridCtrl.queryParams.skip = 0
-		gridCtrl.queryParams.take = 50
+		gridCtrl.queryParams.take = gridDpCtrl.pageSize || 50;
 		
 		gridDpCtrl.isDataFetchProgress = true;
+		
+		gridCtrl.dataSource = function(queryParamaters) {
+					
+			var defered = $q.defer();
+			  switch (gridDpCtrl.type.toUpperCase()) {
+                case "PROMISE":
+                    gridDpCtrl.source()(queryParamaters).then(function(data){
+						defered.resolve(data)
+					});
+                    break;
+					
+				case "JSON":
+						setTimeout(function(){
+							defered.resolve(gridDpCtrl.source());
+						})
+                    break;
+            }
+			return defered.promise;
+		}
 		
 		setTimeout(function(){
 			angular.element($window).bind("scroll", function(e) {
@@ -46,7 +62,7 @@
 			if(gridDpCtrl.isDataFetchProgress){
 				return;
 			}
-			gridCtrl.queryParams.skip += gridDpCtrl.pageSize || 50;
+			gridCtrl.queryParams.skip += gridCtrl.queryParams.take;
 			gridDpCtrl.fetchData();
 		}
 		
@@ -54,35 +70,26 @@
 		
 		gridDpCtrl.fetchData = function(callback) {
 			gridDpCtrl.isDataFetchProgress = true;
-            switch (gridDpCtrl.type.toUpperCase()) {
-                case "PROMISE":
-                    gridDpCtrl.source()(gridCtrl.queryParams).then(function(result) {
-                        gridCtrl.dataItems = gridCtrl.dataItems.concat(result);
-						gridCtrl.populateVisibleItems();
-						if(typeof(callback) === "function")
-						{
-							callback(result);
-						}
-						gridDpCtrl.isDataFetchProgress = false;
-					});
-                    break;
-					
-				case "JSON":
-                        gridCtrl.dataItems = gridDpCtrl.source();
-						gridCtrl.populateVisibleItems();
-						gridDpCtrl.isDataFetchProgress = false;
-                    break;
-            }
+			gridCtrl.dataSource(gridCtrl.queryParams).then(function(result) {
+				gridCtrl.dataItems = gridCtrl.dataItems.concat(result);
+				gridCtrl.populateVisibleItems();
+				if(typeof(callback) === "function")
+				{
+					callback(result);
+				}
+				gridDpCtrl.isDataFetchProgress = false;
+			});
         }
 		
 		gridDpCtrl.fetchCount = function(callback){
-			gridDpCtrl.countSource()(gridCtrl.queryParams).then(function(result) {
-                        gridCtrl.totalItemCount = result;
-						if(typeof(callback) === "function")
-						{
-							callback(result);
-						}
-					});
+			gridDpCtrl.countSource()(gridCtrl.queryParams)
+			.then(function(result) {
+				gridCtrl.totalItemCount = result;
+				if(typeof(callback) === "function")
+				{
+					callback(result);
+				}
+			});
 		}
 
         $scope.$on("onReload",function(){
@@ -92,9 +99,5 @@
 		$scope.$on("onInfiniteScroll",function(){
 			gridDpCtrl.fetchNextPage();
 		});
-		
-        setTimeout(function() {
-            $element.parent().children();
-        }, 0);
     }
 })();

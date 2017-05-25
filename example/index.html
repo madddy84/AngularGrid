@@ -20,13 +20,16 @@
 
 <body ng-app="angularGrid">
 
+	
+
     <div ng-controller="testController as tc">
-	
-	{{tc.testGrid.selector.getSelectedItemIds()}}
-	
+	<input type="button" ng-click="tc.getSelected()" value="Get"></input>
+	<hr>
+	{{tc.selected}}
+	<hr>
         <div angular-grid="tc.testGrid">
 			<angular-grid-global-search server-side-filter-fields="[]" client-side-filter-fields="[]"></angular-grid-global-search>
-            <angular-grid-data-provider total-item-count="1000" type="promise" source="tc.getGridData"></angular-grid-data-provider>
+            <angular-grid-data-provider type="promise" source="tc.getGridData"></angular-grid-data-provider>
 			<angular-grid-item-selector selection-mode="Multiple" selected-items="tc.selected"></angular-grid-item-selector>
 			
             <angular-grid-columns default-sort-field-name="Name" default-sort-order="ASC" identity-field-name="Id">
@@ -49,12 +52,16 @@
 			return "Hi" + e.cell
 		}
 		
+		self.getSelected = function(){
+			self.selected = self.testGrid.selector.getSelectedItemIds();
+		}
+		
         self.getGridData = function(queryParams) {
             var defer = $q.defer();
             setTimeout(function() {
                 var data = [];
 				
-				for(var a=queryParams.skip + 1;a<=(queryParams.take + queryParams.skip) && a < 377;a++)
+				for(var a=queryParams.skip + 1;a<=(queryParams.take + queryParams.skip) && a < 90000;a++)
 				{
 					data.push({
 						"Id":a,
@@ -71,7 +78,7 @@
 
         setTimeout(function() {
             self.testGrid.reload();
-			self.testGrid.selector.setSelectedItemIds([3,10,200,30]);
+			self.testGrid.selector.setSelectedItemIds([3]);
         }, 0);
     });
 </script>
