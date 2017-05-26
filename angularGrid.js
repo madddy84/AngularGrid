@@ -40,10 +40,6 @@
 				$scope.$broadcast("onElementAction",e);
 			};
 			
-			gridCtrl.angularGrid.reload = function() {
-				$scope.$broadcast("onReload");
-			}
-			
 			gridCtrl.onInfiniteScroll = function(){
 				$scope.$broadcast("onInfiniteScroll");
 			}

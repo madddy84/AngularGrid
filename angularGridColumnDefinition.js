@@ -5,6 +5,8 @@
         .module('angularGrid')
         .directive('angularGridColumnDefinition', angularGridColumnDefinition);
 
+	var gridClmnsDefDrtv = {}
+		
     function angularGridColumnDefinition() {
         var directive = {
             bindToController: {
@@ -14,7 +16,8 @@
 				rowCellTemplateUrl: "@",
 				headerCellTemplateUrl: "@",
 				customDisplayText: "&",
-				cellSize:"="
+				cellSize:"=",
+				sortEnabled: "@"
             },
             require: "^angularGridColumns",
             controller: angularGridColumnDefinitionController,
@@ -31,12 +34,14 @@
 
     function angularGridColumnDefinitionController($scope, $element) {
         var gridClmnsDefCtrl = this;
-        var gridClmnsCtrl = $element.parent().controller("angularGridColumns");
 		var gridCtrl = $element.parent().controller("angularGrid");
-		
+					
         setTimeout(function() {
 			
 			var cssClasses = [];
+			gridClmnsDefCtrl.sortEnabled = gridClmnsDefCtrl.sortEnabled === undefined ? true : gridClmnsDefCtrl.sortEnabled; 
+			gridClmnsDefCtrl.sortOrder = gridClmnsDefCtrl.sortOrder === undefined ? "DEFAULT" : gridClmnsDefCtrl.sortEnabled; 
+		
 			
 			if(gridClmnsDefCtrl.cellSize)
 			{
@@ -46,17 +51,19 @@
 				gridClmnsDefCtrl.cellSize.lg ? cssClasses.push("col-lg-" + gridClmnsDefCtrl.cellSize.lg) : "";
 			}
 			
-			gridClmnsDefCtrl
-				gridCtrl.columns.push(
-				{
-					sortOrder : gridClmnsDefCtrl.sortOrder,
-					fieldName : gridClmnsDefCtrl.fieldName,
-					fieldTitle : gridClmnsDefCtrl.fieldTitle,
-					headerCellTemplateUrl : gridClmnsDefCtrl.headerCellTemplateUrl || "../defaultTemplates/columnHeaderCellTemplate.html",
-					rowCellTemplateUrl : gridClmnsDefCtrl.rowCellTemplateUrl || "../defaultTemplates/rowCellTemplate.html",
-					cssClasses : cssClasses.length ? cssClasses.join(" ") : "col-xs-1",
-					customDisplayTextFunc : gridClmnsDefCtrl.customDisplayText
-				});
+			var column = {
+				sortOrder : gridClmnsDefCtrl.sortOrder,
+				sortEnabled : gridClmnsDefCtrl.sortEnabled,
+				fieldName : gridClmnsDefCtrl.fieldName,
+				fieldTitle : gridClmnsDefCtrl.fieldTitle || gridClmnsDefCtrl.fieldName,
+				headerCellTemplateUrl : gridClmnsDefCtrl.headerCellTemplateUrl || "../defaultTemplates/columnHeaderCellTemplate.html",
+				rowCellTemplateUrl : gridClmnsDefCtrl.rowCellTemplateUrl || "../defaultTemplates/rowCellTemplate.html",
+				cssClasses : cssClasses.length ? cssClasses.join(" ") : "col-xs-1",
+				customDisplayTextFunc : gridClmnsDefCtrl.customDisplayText
+			};
+				
+			gridCtrl.columns.push(column);
+			
         }, 0);
     }
 })();

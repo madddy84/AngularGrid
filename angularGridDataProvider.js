@@ -28,6 +28,8 @@
     function GridDataProviderController($scope, $element, $window,$q) {
         var gridDpCtrl = this;
         var gridCtrl = $element.parent().controller("angularGrid");
+		var gridScop = $element.parent().scope("angularGrid");
+		
 		gridCtrl.queryParams.skip = 0
 		gridCtrl.queryParams.take = gridDpCtrl.pageSize || 50;
 		
@@ -69,8 +71,13 @@
 		gridDpCtrl.pageEndReached = false;
 		
 		gridDpCtrl.fetchData = function(callback) {
+			var localCopy = JSON.parse(JSON.stringify(gridCtrl.queryParams));
 			gridDpCtrl.isDataFetchProgress = true;
-			gridCtrl.dataSource(gridCtrl.queryParams).then(function(result) {
+			gridCtrl.dataSource(localCopy).then(function(result) {
+				if(localCopy.skip === 0)
+				{
+					gridCtrl.dataItems.length = 0;
+				}
 				gridCtrl.dataItems = gridCtrl.dataItems.concat(result);
 				gridCtrl.populateVisibleItems();
 				if(typeof(callback) === "function")
@@ -92,8 +99,13 @@
 			});
 		}
 
+		gridCtrl.angularGrid.reload = function(callback) {
+				gridDpCtrl.fetchData(callback);
+				gridScop.$broadcast("onReload");
+		};
+			
         $scope.$on("onReload",function(){
-			gridDpCtrl.fetchData();
+			console.log("Working");
 		});
   
 		$scope.$on("onInfiniteScroll",function(){

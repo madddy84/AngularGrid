@@ -19,20 +19,17 @@
 <script src="../angularGridItemSelector.js"></script>
 
 <body ng-app="angularGrid">
-
-	
-
     <div ng-controller="testController as tc">
-	<input type="button" ng-click="tc.getSelected()" value="Get"></input>
-	<hr>
-	{{tc.selected}}
-	<hr>
+		<input type="button" ng-click="tc.getSelected()" value="Get"></input>
+		<hr>
+			{{tc.selected}}
+		<hr>
         <div angular-grid="tc.testGrid">
 			<angular-grid-global-search server-side-filter-fields="[]" client-side-filter-fields="[]"></angular-grid-global-search>
             <angular-grid-data-provider type="promise" source="tc.getGridData"></angular-grid-data-provider>
 			<angular-grid-item-selector selection-mode="Multiple" selected-items="tc.selected"></angular-grid-item-selector>
 			
-            <angular-grid-columns default-sort-field-name="Name" default-sort-order="ASC" identity-field-name="Id">
+            <angular-grid-columns identity-field-name="Id">
                 <angular-grid-column-definition cell-size="{xs:4}" field-name="Id" field-title="X" header-cell-template-url="" row-cell-template-url="../defaultTemplates/rowCellCheckboxTemplate.html"></angular-grid-column-definition>
                 <angular-grid-column-definition cell-size="{xs:4}" field-name="Name" field-title="" header-cell-template-url="" row-cell-template-url=""></angular-grid-column-definition>
 				<angular-grid-column-definition cell-size="{xs:4}" field-name="Age" field-title="" header-cell-template-url="" row-cell-template-url="" custom-display-text="tc.dispText"></angular-grid-column-definition>
@@ -53,7 +50,7 @@
 		}
 		
 		self.getSelected = function(){
-			self.selected = self.testGrid.selector.getSelectedItemIds();
+			self.selected = self.testGrid.selector.getSelectedItemIds().length;
 		}
 		
         self.getGridData = function(queryParams) {
@@ -61,11 +58,11 @@
             setTimeout(function() {
                 var data = [];
 				
-				for(var a=queryParams.skip + 1;a<=(queryParams.take + queryParams.skip) && a < 90000;a++)
+				for(var a=queryParams.skip + 1;a<=(queryParams.take + queryParams.skip) && a < 99999;a++)
 				{
 					data.push({
 						"Id":a,
-						"Name": "Bob Ferguson " + a,
+						"Name": "Bob Ferguson " + a + queryParams.sortExpressions,
 						"Age": a
 					});
 				}

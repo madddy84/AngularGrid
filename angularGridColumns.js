@@ -5,11 +5,15 @@
         .module('angularGrid')
         .directive('angularGridColumns', angularGridColumns);
 
+	var sortOrders = {
+		"DEFAULT" : "ACS",
+		"ACS" : "DESC",
+		"DESC" : "DEFAULT"
+	}
+	
     function angularGridColumns() {
         var directive = {
             bindToController: {
-                defaultSortOrder: "=",
-                defaultSortFieldName: "=",
                 identityFieldName: "@"
             },
             require: "^angularGrid",
@@ -32,24 +36,60 @@
     function angularGridColumnsController($scope, $element, $compile) {
         var gridClmnsCtrl = this;
         var gridCtrl = $element.parent().controller("angularGrid");
-				
+						
 		gridClmnsCtrl.$onInit = function(){
 			gridCtrl.identityFieldName = gridClmnsCtrl.identityFieldName;
 			gridCtrl.columns = [];
+			gridCtrl.queryParams.sortExpressions = [];
+		}
+		
+		$scope.$on("onElementAction", function(e, args){
+			if(args.elementType === "headerCell")
+			{
+				gridClmnsCtrl.onToggleSort(args);
+			}
+		});
+		
+		gridClmnsCtrl.onToggleSort = function(args){
+			
+			var column = args.col;
+			
+			if(!column.sortEnabled){
+				return;
+			}
+			
+			if(!args.eventArgs.shiftKey)
+			{
+				gridCtrl.queryParams.sortExpressions.length = 0;
+			}
+			else{
+				var index = gridCtrl.queryParams.sortExpressions.indexOf(column.fieldName + " " + column.sortOrder);
+				if(index >= 0){
+					gridCtrl.queryParams.sortExpressions.splice(index,1);
+				}
+			}
+			
+			var newSortOrder = sortOrders[column.sortOrder];
+			
+			if(newSortOrder != "DEFAULT")
+			{
+				gridCtrl.queryParams.sortExpressions.push(column.fieldName + " " + newSortOrder)
+			}
+			
+			gridCtrl.queryParams.skip = 0;
+			
+			gridCtrl.angularGrid.reload(function(){
+				column.sortOrder = newSortOrder;
+			});
 		}
 		
 		gridClmnsCtrl.populateColumns = function(){
 			gridCtrl.columns = []
 			$compile($element.contents())
 		}
-		
-		gridClmnsCtrl.onToggleSort = function(col){
-			
-		}
 
         setTimeout(function() {
 			gridClmnsCtrl.populateColumns();
-            //gridCtrl.queryParams.sortExpression = gridClmnsCtrl.defaultSortFieldName + ' ' + gridClmnsCtrl.defaultSortOrder;
-        })
+        });
     }
 })();
